@@ -24,6 +24,7 @@ Also, when a note is pressed, the color of the note text should change from NOTE
 
 It is necessary to ensure the processing of a long press on a note lasting 1 second, as a result of which the message "The note is pressed with a delay of 1 sec!" should appear on the screen.
 
+All added text elements with notes must have `testID="noteElem"` and `Pressable` elements must have `testID="pressableElem"`.
 
 **ADVICE**
 Think about how to store and work with the current list of added notes.
