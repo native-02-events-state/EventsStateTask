@@ -1,6 +1,10 @@
 import { render, fireEvent } from "@testing-library/react-native";
-import { View, TextInput } from "react-native";
 import App from "./App";
+
+export const changeTextInput = (element, text) => {
+  fireEvent.changeText(element, text);
+  fireEvent(element, "onChange", { nativeEvent: { text } });
+};
 
 describe("App", () => {
   test("check that the note container is empty before entering notes", () => {
@@ -11,7 +15,7 @@ describe("App", () => {
   test("check that the input text field is cleared after the button is pressed", () => {
     const { getByPlaceholderText, getByText } = render(<App />);
 
-    fireEvent.changeText(getByPlaceholderText("Enter your note"), "new item");
+    changeTextInput(getByPlaceholderText("Enter your note"), "new item");
     fireEvent.press(getByText("Add note"));
 
     expect(getByPlaceholderText("Enter your note")).toHaveDisplayValue("");
@@ -29,10 +33,7 @@ describe("App", () => {
       <App />
     );
 
-    fireEvent.changeText(
-      getByPlaceholderText("Enter your note"),
-      "New note text"
-    );
+    changeTextInput(getByPlaceholderText("Enter your note"), "New note text");
     fireEvent.press(getByText("Add note"));
     fireEvent.press(getByText("Add note"));
 
@@ -43,7 +44,7 @@ describe("App", () => {
     const { getByPlaceholderText, getByText, getAllByText, queryAllByTestId } =
       render(<App />);
 
-    fireEvent.changeText(getByPlaceholderText("Enter your note"), "note 1");
+    changeTextInput(getByPlaceholderText("Enter your note"), "note 1");
     fireEvent.press(getByText("Add note"));
 
     expect(getAllByText("note 1")).toHaveLength(1);
@@ -54,10 +55,10 @@ describe("App", () => {
     const { getByPlaceholderText, getByText, getAllByText, queryAllByTestId } =
       render(<App />);
 
-    fireEvent.changeText(getByPlaceholderText("Enter your note"), "Item 1");
+    changeTextInput(getByPlaceholderText("Enter your note"), "Item 1");
     fireEvent.press(getByText("Add note"));
 
-    fireEvent.changeText(getByPlaceholderText("Enter your note"), "Item 2");
+    changeTextInput(getByPlaceholderText("Enter your note"), "Item 2");
     fireEvent.press(getByText("Add note"));
 
     expect(getAllByText("Item 1")).toHaveLength(1);
@@ -68,13 +69,9 @@ describe("App", () => {
   test("check note styles", () => {
     const BACKGROUND_COLOR = "#ffffff";
     const NOTE_COLOR = "#ffffff";
-
     const { getByPlaceholderText, getByText, getByTestId } = render(<App />);
 
-    fireEvent.changeText(
-      getByPlaceholderText("Enter your note"),
-      "New note text"
-    );
+    changeTextInput(getByPlaceholderText("Enter your note"), "New note text");
     fireEvent.press(getByText("Add note"));
 
     expect(getByTestId("pressableElem")).toHaveStyle({
