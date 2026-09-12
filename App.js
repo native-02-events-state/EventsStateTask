@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,6 +6,7 @@ import {
   Button,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 
 const BACKGROUND_COLOR = "#ffffff";
@@ -13,20 +15,58 @@ const NOTE_COLOR = "#ffffff";
 const PRESSED_NOTE_COLOR = "#ffff00";
 
 export default function App() {
-  // your work with state
+  const [inputText, setInputText] = useState("");
+  const [notes, setNotes] = useState([]);
+
+  const handleAddNote = () => {
+    const trimmed = inputText.trim();
+    if (!trimmed) return;
+
+    setNotes((prevNotes) => [...prevNotes, trimmed]);
+    setInputText("");
+  };
+
+  const handleLongPress = () => {
+    Alert.alert("The note is pressed with a delay of 1 sec!");
+  };
 
   return (
     <View style={styles.appContainer}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} placeholder="Enter your note" />
-        <Button title="Add note" />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter your note"
+          value={inputText}
+          onChangeText={setInputText}
+        />
+        <Button title="Add note" onPress={handleAddNote} />
       </View>
       <View>
-        <Pressable testID="pressableElem">
-          <Text testID="noteElem" style={styles.noteElem}>
-            note_text
-          </Text>
-        </Pressable>
+        {notes.map((note, index) => (
+          <Pressable
+            key={index}
+            testID="pressableElem"
+            delayLongPress={1000}
+            onLongPress={handleLongPress}
+            style={({ pressed }) => ({
+              backgroundColor: pressed
+                ? PRESSED_BACKGROUND_COLOR
+                : BACKGROUND_COLOR,
+            })}
+          >
+            {({ pressed }) => (
+              <Text
+                testID="noteElem"
+                style={[
+                  styles.noteElem,
+                  { color: pressed ? PRESSED_NOTE_COLOR : NOTE_COLOR },
+                ]}
+              >
+                {note}
+              </Text>
+            )}
+          </Pressable>
+        ))}
       </View>
     </View>
   );
